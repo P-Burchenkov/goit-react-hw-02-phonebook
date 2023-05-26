@@ -40,6 +40,7 @@ export class App extends Component {
         console.log(contacts[i].number);
         if (data.number === contacts[i].number) {
           console.log('ooops');
+          return;
         }
       }
       contacts.push(data);
