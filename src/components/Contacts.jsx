@@ -4,12 +4,17 @@ export default function Contacts({ contacts }) {
   return (
     <ul>
       {contacts.map(contact => {
-        return <li key={contact}>{contact}</li>;
+        return <li key={contact.name}>{Object.values(contact)}</li>;
       })}
     </ul>
   );
 }
 
 Contacts.propTypes = {
-  contacts: PropTypes.arrayOf(PropTypes.string).isRequired,
+  contacts: PropTypes.arrayOf(
+    PropTypes.exact({
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
