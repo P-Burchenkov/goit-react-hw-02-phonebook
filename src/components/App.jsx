@@ -40,7 +40,7 @@ export class App extends Component {
     const { contacts } = this.state;
     for (let i = 0; i < contacts.length; i++) {
       if (contacts[i].id === evt.currentTarget.id) {
-        const newArry = contacts.splice(i, 1);
+        contacts.splice(i, 1);
         this.setState(prevState => ({
           contacts: [...prevState.contacts],
         }));
