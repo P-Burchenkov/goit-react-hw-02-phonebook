@@ -1,97 +1,65 @@
 import { Component } from 'react';
 import Contacts from './Contacts';
-
-// export const App = () => {
-//   return (
-//     <div
-//       style={{
-//         height: '100vh',
-//         display: 'flex',
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         fontSize: 40,
-//         color: '#010101'
-//       }}
-//     >
-//       React homework template
-//     </div>
-//   );
-// };
+import SearchBox from './SearchBox';
+import ContactForm from './ContactForm';
 
 export class App extends Component {
   state = {
     contacts: [],
-    name: '',
-    number: '',
+    filter: '',
   };
 
-  handleChange = evt => {
-    const { name, value } = evt.currentTarget;
+  formSubmitHandler = data => {
+    const { contacts } = this.state;
 
-    this.setState({ [name]: value });
-  };
-
-  addContact = evt => {
-    evt.preventDefault();
-    this.setState(prevState => {
-      const { contacts } = this.state;
-      const data = { name: prevState.name, number: prevState.number };
-      for (let i = 0; i < contacts.length; i += 1) {
-        console.log(contacts[i].number);
-        if (data.number === contacts[i].number) {
-          console.log('ooops');
-          return;
-        }
+    for (let i = 0; i < contacts.length; i++) {
+      if (contacts[i].number === data.number) {
+        alert(`${data.number} is already in contacts`);
+        return;
       }
-      contacts.push(data);
-    });
-    // this.setState(prevState => {
-    //   const { contacts } = this.state;
-    //   const data = { name: prevState.name, number: prevState.number };
-    //   contacts.push(data);
-    // });
-    this.reset();
+    }
+
+    this.setState(prevState => ({
+      contacts: [...prevState.contacts, data],
+    }));
   };
 
-  compareNumbers = () => {};
+  changeFilter = evt => {
+    this.setState({ filter: evt.currentTarget.value });
+  };
 
-  reset = () => {
-    this.setState({ name: '', number: '' });
+  getfilteredContacts = () => {
+    const { contacts, filter } = this.state;
+    const normilizedFilter = filter.toLocaleLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normilizedFilter)
+    );
+  };
+
+  delContact = evt => {
+    const { contacts } = this.state;
+    for (let i = 0; i < contacts.length; i++) {
+      if (contacts[i].id === evt.currentTarget.id) {
+        const newArry = contacts.splice(i, 1);
+        this.setState(prevState => ({
+          contacts: [...prevState.contacts],
+        }));
+      }
+    }
   };
 
   render() {
     return (
-      <div>
+      <div className="container">
         <h1>PhoneBook</h1>
-        <form onSubmit={this.addContact}>
-          <label>
-            Name
-            <input
-              type="text"
-              name="name"
-              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-              required
-              value={this.state.name}
-              onChange={this.handleChange}
-            />
-          </label>
-          <label>
-            Number
-            <input
-              type="tel"
-              name="number"
-              pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-              title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-              required
-              onChange={this.handleChange}
-              value={this.state.number}
-            />
-          </label>
-          <button type="submit">Add contact</button>
-        </form>
+        <ContactForm onSubmit={this.formSubmitHandler} />
+
         <h2>Contacts</h2>
-        <Contacts contacts={this.state.contacts} />
+        <SearchBox value={this.state.filter} onChange={this.changeFilter} />
+        <Contacts
+          contacts={this.getfilteredContacts()}
+          deleteContact={this.delContact}
+        />
       </div>
     );
   }
