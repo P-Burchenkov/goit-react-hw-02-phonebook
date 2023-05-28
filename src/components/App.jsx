@@ -14,7 +14,9 @@ export class App extends Component {
 
     for (let i = 0; i < contacts.length; i++) {
       if (contacts[i].number === data.number) {
-        alert(`${data.number} is already in contacts`);
+        alert(
+          `${data.number} is already in your contacts with name:  ${data.name}`
+        );
         return;
       }
     }
