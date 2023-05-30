@@ -9,6 +9,25 @@ export class App extends Component {
     filter: '',
   };
 
+  handleSubmit = (data, actions) => {
+    console.log(actions);
+    const { contacts } = this.state;
+
+    for (let i = 0; i < contacts.length; i++) {
+      if (contacts[i].number === data.number) {
+        alert(
+          `${data.number} is already in your contacts with name:  ${contacts[i].name}`
+        );
+        return;
+      }
+    }
+
+    this.setState(prevState => ({
+      contacts: [...prevState.contacts, data],
+    }));
+    actions.resetForm();
+  };
+
   formSubmitHandler = data => {
     const { contacts } = this.state;
 
@@ -54,7 +73,7 @@ export class App extends Component {
     return (
       <div className="container">
         <h1>PhoneBook</h1>
-        <ContactForm onSubmit={this.formSubmitHandler} />
+        <ContactForm handleSubmit={this.handleSubmit} />
 
         <h2>Contacts</h2>
         <SearchBox value={this.state.filter} onChange={this.changeFilter} />
